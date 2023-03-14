@@ -533,12 +533,13 @@ const Full = styled.div`
 const Purple = styled.div`
   width: 100%;
   height: 240px;
-  background-image: url("/assets/images/bg-main-desktop.png");
+  background-image: url("/assets/images/bg-main-mobile.png");
   background-repeat: no-repeat;
   background-size: cover;
   @media (width > 1200px){
     width: 32%;
     height: 100vh;
+    background-image: url("/assets/images/bg-main-desktop.png");
   }
 `;
 
