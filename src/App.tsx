@@ -4,6 +4,9 @@ import styled, { createGlobalStyle } from "styled-components";
 import InputMask from "react-input-mask";
 
 function App() {
+
+  const [isSubmited, setIsSubmited] = useState<boolean>(false);
+  
   const {
     register,
     watch,
@@ -17,8 +20,12 @@ function App() {
   const YY = watch("yy");
   const CVC = watch("cvc");
   const onSubmit = () => {
-    console.log("submited");
+    setIsSubmited(true)
   };
+  const onContinue = () => {
+    setIsSubmited(false);
+    window.location.reload();
+  }
 
   return (
     <Full>
@@ -46,61 +53,8 @@ function App() {
             </NameDate>
           </ImgFront>
         </MainCard>
-        <MainContent>
-          {/* <form>
-            <ContentH2>Cardholder Name</ContentH2>
-            <Input
-              type="text"
-              placeholder="e.g. Jane Appleseed"
-              {...register("cardHolder", {
-                pattern: /^[A-Za-z]+$/i,
-              })}
-            />
-            <ContentH2>Card Number</ContentH2>
-            <Input
-              minLength={16}
-              maxLength={16}
-              type="text"
-              placeholder="e.g. 1234 5678 9123 0000"
-              {...register("cardNumber", {
-                
-                pattern: {
-                  value: /^[0-9]$/,
-                  message: "Wrong format, numbers only",
-                },
-              })}
-            />
-            {errors.cardNumber && errors.cardNumber.message}
-            <div>
-              <ExpDateCVCH2>
-                <ContentH2 style={{ width: "50%" }}>
-                  Exp. Date (MM/YY)
-                </ContentH2>
-                <ContentH2 style={{ width: "50%" }}>CVC</ContentH2>
-              </ExpDateCVCH2>
-              <ExpDateCVCInputs>
-                <SmallInput
-                  style={{ marginRight: "8px" }}
-                  type="text"
-                  placeholder="MM"
-                  {...register("mm")}
-                />
-                <SmallInput
-                  style={{ marginRight: "11px" }}
-                  type="text"
-                  placeholder="YY"
-                  {...register("yy")}
-                />
-                <Input
-                  style={{ width: "50%", marginBottom: "0" }}
-                  type="text"
-                  placeholder="e.g. 123"
-                  {...register("cvc")}
-                />
-              </ExpDateCVCInputs>
-            </div>
-            <Button onClick={handleSubmit(onSubmit)}>Confirm</Button>
-          </form> */}
+        <MainContent display={isSubmited ? "none" : "flex"}>
+         
 
           <form action="">
             <Label htmlFor="">
@@ -141,38 +95,11 @@ function App() {
                 mask="9999 9999 9999 9999"
               />
             </Label>
-            <ErrorText style={{ top: "167px" }}>
+            <ErrorText style={{top:window.innerWidth > 1199 ? "442px" :  "167px" }}>
               {" "}
               {errors.cardNumber && errors.cardNumber.message}
             </ErrorText>
-            {/* <div>
-              <ExpDateCVCH2>
-                <ContentH2 style={{ width: "50%" }}>
-                  Exp. Date (MM/YY)
-                </ContentH2>
-                <ContentH2 style={{ width: "50%" }}>CVC</ContentH2>
-              </ExpDateCVCH2>
-              <ExpDateCVCInputs>
-                <SmallInput
-                  style={{ marginRight: "8px" }}
-                  type="text"
-                  placeholder="MM"
-                  {...register("mm")}
-                />
-                <SmallInput
-                  style={{ marginRight: "11px" }}
-                  type="text"
-                  placeholder="YY"
-                  {...register("yy")}
-                />
-                <Input
-                  style={{ width: "50%", marginBottom: "0" }}
-                  type="text"
-                  placeholder="e.g. 123"
-                  {...register("cvc")}
-                />
-              </ExpDateCVCInputs>
-            </div> */}
+            
 
             <DateLabel>
               <Label style={{ width: "100%" }} htmlFor="">
@@ -200,7 +127,7 @@ function App() {
                   />
                   <SmallInput
                     maxLength={2}
-                    minLentgh={2}
+                    minLentgh={1}
                     min={23}
                     max={30}
                     border={errors.yy && "1px solid #FF5050"}
@@ -257,6 +184,13 @@ function App() {
             <Button onClick={handleSubmit(onSubmit)}>Confirm</Button>
           </form>
         </MainContent>
+        <SubmitedDiv display={isSubmited ? "flex" : "none"}>
+          <CompletedImg src="/assets/images/icon-complete.svg" alt="" />
+          <CompletedH1>THANK YOU!</CompletedH1>
+          <CompletedP>We’ve added your card details</CompletedP>
+          <Button onClick={onContinue}>Continue</Button>
+        </SubmitedDiv>
+
       </Main>
     </Full>
   );
@@ -264,6 +198,41 @@ function App() {
 
 export default App;
 
+const CompletedH1 = styled.h1`
+margin: 35px auto 0 auto;
+font-size: 28px;
+line-height: 36px;
+text-align: center;
+letter-spacing: 3.42222px;
+color: #21092F;
+`
+
+const CompletedP = styled.p`
+margin: 16px auto 33px auto;
+  font-weight: 500;
+font-size: 18px;
+line-height: 23px;
+text-align: center;
+color: #8F8694;
+
+`
+
+const SubmitedDiv = styled.div<any>`
+padding: 0 24px;
+width: 100%;
+display: ${(props) => props.display};
+flex-direction: column;
+position: relative;
+top: -11px;
+@media (width > 1200px) {
+  width: 50%;
+  padding: 305px 15.76% 0 103px;
+}
+  
+`
+const CompletedImg = styled.img`
+  margin: 0 auto;
+`
 const ErrorText = styled.p<any>`
   font-weight: 500;
   font-size: 12px;
@@ -271,9 +240,15 @@ const ErrorText = styled.p<any>`
   color: #ff5050;
   position: absolute;
   top: 77px;
+  @media (width > 1200px) {
+    top: 352px;
+  }
 `;
 const ErrorTextMonth = styled(ErrorText)`
   top: 260px;
+  @media (width > 1200px) {
+    top: 535px;
+  }
 `;
 
 const DateLabel = styled.div`
@@ -370,13 +345,18 @@ const SmallInput = styled(Input)`
   }
 `;
 
-const MainContent = styled.div`
-  display: flex;
+const MainContent = styled.div<any>`
+  display: ${(props) => props.display};
   flex-direction: column;
   width: 100%;
   padding: 0 24px 0 24px;
   position: relative;
   top: -25px;
+  @media (width > 1200px){
+    top: 0;
+    width: 50%;
+    padding: 275px 15.76% 0 103px;
+  }
 `;
 const ContentH2 = styled.h2`
   font-weight: 500;
@@ -403,6 +383,13 @@ const FrontP = styled.p`
   text-transform: uppercase;
   margin-top: 17px;
   color: white;
+  @media (width > 1200px){
+    font-weight: 500;
+font-size: 14px;
+line-height: 18px;
+letter-spacing: 2px;
+margin-top: 25.5px;
+  }
 `;
 
 const FrontH1 = styled.h1`
@@ -412,6 +399,14 @@ const FrontH1 = styled.h1`
   letter-spacing: 2.2px;
   color: #ffffff;
   margin-top: 37px;
+  @media (width > 1200px){
+font-weight: 500;
+font-size: 28px;
+line-height: 36px;
+letter-spacing: 3.42222px;
+margin-top: 64px;
+
+  }
 `;
 
 const Circles = styled.div`
@@ -419,12 +414,18 @@ const Circles = styled.div`
   flex-direction: row;
   align-items: center;
   height: 38px;
+  
 `;
 const BigCircle = styled.div`
   width: 30.19px;
   height: 30px;
   border-radius: 50%;
   background: white;
+
+  @media (width > 1200px){
+    width: 46.96px;
+    height: 47px;
+  }
 `;
 const LilCircle = styled.div`
   width: 13.58px;
@@ -433,6 +434,11 @@ const LilCircle = styled.div`
   background: transparent;
   border: 1px solid white;
   margin-left: 10.23px;
+  @media (width > 1200px){
+    width: 21.13px;
+    height: 21.15px;
+    margin-left: 15.91px;
+  }
 `;
 
 const MainCard = styled.div`
@@ -440,6 +446,11 @@ const MainCard = styled.div`
   padding: 32px 16px 0 17px;
   display: flex;
   flex-direction: column;
+  @media (width > 1200px){
+    width: 50%;
+    padding: 187px 0 0 11.38888%;
+    height: 100vh;
+  }
 `;
 
 const ImgFront = styled.div`
@@ -454,6 +465,13 @@ const ImgFront = styled.div`
   padding: 17.6px 20.89px 20.6px 19px;
   display: flex;
   flex-direction: column;
+  @media (width > 1200px){
+    width: 447px;
+    height: 245px;
+    padding: 28px 31.86px 26.5px 26.5px;
+    top: 0;
+    order: 1;
+  }
 `;
 
 const ImgBack = styled.div`
@@ -465,6 +483,13 @@ const ImgBack = styled.div`
   background-repeat: no-repeat;
   background-size: cover;
   padding: 73.64px 0 0 228.98px;
+  @media (width > 1200px){
+    width: 447px;
+    height: 245px;
+    padding: 111px 0 0 351px;
+    order: 2;
+    margin-top: 37px;
+  }
 `;
 
 const BackP = styled.p`
@@ -476,6 +501,14 @@ const BackP = styled.p`
   text-transform: uppercase;
   color: #ffffff;
   width: 20px;
+
+  @media (width > 1200px) {
+    font-weight: 500;
+font-size: 14px;
+line-height: 18px;
+text-align: right;
+letter-spacing: 2px;
+  }
 `;
 
 const Main = styled.div`
@@ -484,6 +517,11 @@ const Main = styled.div`
   display: flex;
   flex-direction: column;
   position: absolute;
+   @media (width > 1200px){
+    
+  flex-direction:row;
+  
+  }
 `;
 
 const Full = styled.div`
@@ -498,12 +536,20 @@ const Purple = styled.div`
   background-image: url("/assets/images/bg-main-desktop.png");
   background-repeat: no-repeat;
   background-size: cover;
+  @media (width > 1200px){
+    width: 32%;
+    height: 100vh;
+  }
 `;
 
 const White = styled.div`
   width: 100%;
   height: 464px;
   background: white;
+  @media (width > 1200px){
+    width: 68%;
+    height: 100vh;
+  }
 `;
 
 const Background = styled.div`
@@ -512,6 +558,10 @@ const Background = styled.div`
   width: 100%;
   height: 100vh;
   position: absolute;
+
+  @media (width > 1200px){
+    flex-direction: row;
+  }
 `;
 
 const GlobalStyle = createGlobalStyle`
